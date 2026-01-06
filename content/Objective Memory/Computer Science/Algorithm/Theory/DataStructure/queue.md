@@ -2,6 +2,8 @@
 Date: 2024-07-27
 tags:
   - Algorithm
+  - CLRS
+  - DataStructure
 ---
 # Prerequisite Algorithm
 # Concept

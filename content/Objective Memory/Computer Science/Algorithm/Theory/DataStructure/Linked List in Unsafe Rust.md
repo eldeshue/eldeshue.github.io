@@ -3,6 +3,8 @@ Date: 2025-07-27
 tags:
   - Algorithm
   - ProgrammingLanguage
+  - CLRS
+  - DataStructure
 ---
 # Overview
 Linked List를 구현하면서 사용하게 된 Rust의 safety check와 이를 우회하는 unsafe한 feature에 대해서 알아보자.

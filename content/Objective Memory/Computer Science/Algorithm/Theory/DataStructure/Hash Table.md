@@ -2,6 +2,8 @@
 Date: 2025-08-24
 tags:
   - Algorithm
+  - CLRS
+  - DataStructure
 ---
 # Definition of Dictionary
 Dictionary는 삽입(insert), 삭제(delete), 검색(search)이 가능한 자료구조로, 검색을 빠르게 하는 것을 목표로 한다. 

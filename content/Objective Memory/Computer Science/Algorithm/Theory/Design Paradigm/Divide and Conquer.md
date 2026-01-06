@@ -1,7 +1,8 @@
 ---
-Date: 2025-05-23
+Date: 2025-05-30
 tags:
   - Algorithm
+  - CLRS
 ---
 # Description
 단순한 접근으로 풀기에는 어려운 문제에 대하여, 문제의 size를 줄여서 작은 문제를 풀고(divide), 그 작은 문제의 결과를 이용하여 더 큰 문제를 푸는 테크닉. 
@@ -26,8 +27,8 @@ fn divide_conquer(int level, ...) {
 
 	// divide
 	// recursive call, get solution of small problem
-	let sol1 = divide_conquer(levle - 1, ...);
-	let sol2 = divide_conquer(levle - 1, ...);
+	let sol1 = divide_conquer(level - 1, ...);
+	let sol2 = divide_conquer(level - 1, ...);
 	...
 
 	// conquer

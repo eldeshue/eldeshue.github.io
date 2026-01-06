@@ -1,6 +1,7 @@
 ---
 Date: 2024-10-08
 tags:
+  - Algorithm
 ---
 # Prerequisite Algorithm
 [[Tree]], [[Sparse Table]], [[GraphSearch|DFS]]

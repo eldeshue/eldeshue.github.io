@@ -2,6 +2,7 @@
 Date: 2025-07-05
 tags:
   - Algorithm
+  - DataStructure
 ---
 # Prerequisite Algorithm
 # Concept

@@ -1,5 +1,9 @@
 ---
 Date: 2025-09-30
+tags:
+  - Algorithm
+  - CLRS
+  - DataStructure
 ---
 ## 1. 이진 검색 트리란?
 

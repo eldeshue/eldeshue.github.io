@@ -2,6 +2,7 @@
 Date: 2024-08-13
 tags:
   - Algorithm
+  - DataStructure
 ---
 # Prerequisite Algorithm
 - [[stack]]

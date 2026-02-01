@@ -30,7 +30,7 @@ pivot의 선택에는 다음과 같은 방법이 존재한다.
 ## Code
 https://github.com/Yeongtong42/UnderthRust/blob/main/algorithms/sort/quick_sort/src/binary_quick_sort.rs
 
-``` Rust
+``` rust
 
 /// partition slice with pivot at end by comp
 /// romuto partition

@@ -12,7 +12,7 @@ tags:
 
 ## Code
 
-``` C++
+``` cpp
 // in range minimum, return index of the minimum
 // sorting required
 template<typename T>
@@ -73,7 +73,7 @@ int parametricSearchMax(const std::vector<T> &vec, int minIdx, int maxIdx, std::
 > **integer 그 자체를 탐색의 대상으로 삼는 경우, left + right에서 overflow가 발생할 수 있다.**
 
 한 편, c++ 표준 라이브러리에는 upper_bound함수와 lower_bound함수가 있어서 특정한 parametric_search 상황에서 간편하게 사용할 수 있다.
-```C++
+``` cpp
 #include <algorithm>
 
 template<typename T>

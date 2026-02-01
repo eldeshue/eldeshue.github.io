@@ -13,7 +13,7 @@ Rust에서 정의하는 타입 사이의 변환에 대해서 다룬다.
 
 ## Case 1 - ABI
 러스트는 다른 프로그래밍 언어와는 달라서, 두 가지 측면에서 타입 간 변환이 곤란하다. 하나는 rust 특유의 최적화로 인한 layout 변화이다. rust는 ABI가 고정되지 않은 탓에 어느 타입을 정의하는 필드의 구성이 같다고 하더라도, 이들 둘 사이의 변환을 보장하지 않는다.
-``` Rust
+``` rust
 // from Rustnomicon, Type Conversion
 struct Foo {
     x: u32,
@@ -28,7 +28,7 @@ struct Bar {
 위 예제에서 `Foo`와 `Bar`는 동일한 구성의 필드를 갖는다. 하지만, 이 두 타입의 layout은 같다고 보장할 수 없다.  
 
 이러한 경우, 가장 간단한 해법은 다음과 같은 코드를 바탕으로 `into`, `From` 트레잇을 구성하는 것이다.
-``` Rust
+``` rust
 // from Rustnomicon, Type Conversion
 fn reinterpret(foo: Foo) -> Bar {
     let Foo { x, y } = foo;
@@ -43,7 +43,7 @@ fn reinterpret(foo: Foo) -> Bar {
 - https://doc.rust-lang.org/reference/type-coercions.html#coercion-types
 
 다만, 여기에도 주의할 사항이 있는데, 바로 강제 변환이 가능한 관계라 하더라도, 둘은 엄격하게 서로 다른 타입이라는 것이다. 그 예시가 바로 다음과 같다.
-``` Rust
+``` rust
 // from Rustnomicon, Type Coercion
 trait Trait {}
 
@@ -60,7 +60,7 @@ fn main() {
 
 # Type Casting
 캐스팅은 한 타입의 데이터를 다른 타입의 데이터로 취급하는 것으로, Coercion을 포함하는 개념이다. Rust에서 Casting은 `as` 연산자를 통해서 명시적으로만 수행된다. 
-``` Rust
+``` rust
 // (instance of Type1) 'as' Type2
 let var1 : i32 = 44;
 let var2 : f32 = var1 as f32;
@@ -84,7 +84,7 @@ C++에 `reinterpret_cast`가 존재한다면, Rust에는 `Transmute`가 존재�
 C++에서 reinterpret_cast는 low-level한 구현에서 유용하게 사용된다. 그러나 Rust에서 transmute는 그 취급이 다르다. **Rust에서 transmute는 핵폭탄이다.**
 ## 동작 방식
 transmute는 함수로, 다음과 같은 시그니쳐를 갖는다.
-``` Rust
+``` rust
 pub const unsafe fn transmute<Src, Dst>(src: Src) -> Dst
 ```
 `Src`타입의 데이터 src의 소유권을 받아서 `Dst`타입의 인스턴스를 반환한다. 일견 단순한 `into`처럼 보일 수 있지만, 앞서 말한 바와 같이 bit-wise 재해석으로 구현되었다. 두 타입 사이의 유일한 제한 조건은 Size가 같아야 한다는 것이다.

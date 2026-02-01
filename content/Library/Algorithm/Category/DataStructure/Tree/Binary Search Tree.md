@@ -34,7 +34,7 @@ tags:
     5. **Greater** : 오른쪽 자식으로 이동하여 2번 과정을 반복.
     6. 이동하려는 자식이 `None`이면 트리에 값이 없다는 뜻이므로 탐색을 종료.
         
-``` Rust
+``` rust
 // 탐색 함수 구현
 // subtree의 root는 None이 아니다. None이면 검색할 이유가 없음.
 pub fn search(sub_tree: Rc<RefCell<Node<K, V>>>, key: &K) -> Option<Rc<RefCell<Node<K, V>>>> {
@@ -71,7 +71,7 @@ pub fn search(sub_tree: Rc<RefCell<Node<K, V>>>, key: &K) -> Option<Rc<RefCell<N
     - `prev_node.borrow_mut().left = Some(...)` 와 같이 부모와 자식의 연결을 설정합니다.
     - 새 노드의 부모 포인터는 `Rc::downgrade()`를 통해 `Weak` 참조로 만들어 **소유권 순환을 방지**합니다.
     
-``` Rust
+``` rust
 // 삽입 함수 일부 예시
 // ... 탐색 루프 후 ...
 
@@ -110,7 +110,7 @@ if compare_result == Ordering::Less {
     - `transplant`와 `delete` 함수 내에서는 `borrow_mut()`가 빈번하게 사용되어 각 노드의 `left`, `right`, `parent` 포인터를 재설정합니다. `Rc`와 `RefCell` 덕분에 이런 복잡한 '포인터 수술'이 메모리 안전성을 지키며 가능해집니다.   
     - 루트 노드가 삭제될 수도 있으므로, `delete` 함수는 `root` 자체를 변경할 수 있도록 `&mut Option<...>` 형태로 인자를 받습니다.
         
-``` Rust
+``` rust
 // 삭제 함수 일부 예시 (Case 3: 자식이 둘일 경우)
 // z는 삭제할 노드
 let y = Self::minimum(z.borrow().right.as_ref().unwrap().clone()); // 직후 원소 찾기
@@ -147,7 +147,7 @@ Rust의 가장 큰 특징은 바로 **소유권(Ownership)** 시스템입니다.
 - **우리 코드에서**:
     - 부모 노드가 `left`, `right` 자식을 가리킬 때 `Rc`를 사용, 부모가 자식을 소유한다.
     - 이를 통해 하나의 노드가 부모뿐만 아니라, 탐색 중인 임시 변수 등 여러 곳에서 참조될 수 있음.
-``` Rust
+``` rust
 // Node.left 와 Node.right 는 자식 노드를 '공동 소유'합니다.
 struct Node<K, V> {
     // ...
@@ -169,7 +169,7 @@ struct Node<K, V> {
 - **우리 코드에서는?**:
     - `Rc<RefCell<Node<K, V>>>` 형태로 `Rc`와 `RefCell`을 함께 사용합니다.
     - `Rc`로 노드를 안전하게 **공유**하고, `RefCell`을 통해 필요할 때 노드의 내용을 **수정**할 수 있습니다.
-``` Rust
+``` rust
 // prev_node는 Rc<RefCell<Node>> 타입입니다.
 // .borrow_mut()를 통해 불변 변수인 prev_node의 내부 값을 수정합니다.
 prev_node.unwrap().borrow_mut().left = Some(Rc::new(RefCell::new(node)));
@@ -188,7 +188,7 @@ prev_node.unwrap().borrow_mut().left = Some(Rc::new(RefCell::new(node)));
 > 	- 자식 노드가 부모를 가리키는 `parent` 필드를 `Weak<RefCell<Node<K, V>>>`로 선언
 > 	- `부모 -> 자식` 관계는 강한 참조(`Rc`)로 유지하고, `자식 -> 부모` 관계는 약한 참조(`Weak`)로 만들어 순환을 해결함.
 
-``` Rust
+``` rust
 // parent 필드는 소유권을 주장하지 않는 Weak 포인터입니다.
 struct Node<K, V> {
     // ...

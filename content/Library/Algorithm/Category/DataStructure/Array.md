@@ -14,8 +14,10 @@ tags:
 # Implementation - Random Access
 ## Code
 
-``` C++
+```cpp
 template<typename T>
+
+
 T random_access(void *const array, size_t const index)
 {
     // zero based index

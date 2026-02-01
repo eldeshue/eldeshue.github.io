@@ -27,7 +27,7 @@ tags:
 가장 단순한 구현은 다음과 같다.
 ## Code
 
-``` C++
+``` cpp
 #include <array>
 
 // start부터 stride만큼 이동하며 배열의 값을 초기화
@@ -68,12 +68,16 @@ void eratosthenes(std::vector<bool> &sieve) {
 
 각 소수 p에 대하여 크기 N+1인 배열에서 p의 배수를 지우는 횟수는 `N/p`가 된다. 이를 N이하의 모든 P에 대해 수행하면 다음과 같이 표현할 수 있다.
 
-$$\sum_{p \le \sqrt{N}, p \in \text{prime}} \frac{N}{p} = N \times \sum_{p \le \sqrt{N}, p \in \text{prime}} \frac{1}{p}$$
+
+> $$\sum_{p \le \sqrt{N}, p \in \text{prime}} \frac{N}{p} = N \times \sum_{p \le \sqrt{N}, p \in \text{prime}} \frac{1}{p}$$
+
 여기서  [제2 메르텐스 정리](https://ko.wikipedia.org/wiki/%EB%A9%94%EB%A5%B4%ED%85%90%EC%8A%A4_%EC%A0%95%EB%A6%AC)를 도입하면, 다음이 성립한다.
-$$\sum_{p \le x} \frac{1}{p} = \ln \ln x + B + O ( \frac{1}{\ln x}) $$
+
+> $$\sum_{p \le x} \frac{1}{p} = \ln \ln x + B + O ( \frac{1}{\ln x}) $$
+
 따라서, 시간 복잡도는 다음과 같다. sqrt는 0.5 거듭제곱이므로, log에서 상수로 무시될 수 있다.
 
-$$\sum_{p \le N} \frac{N}{p} = N \times \ln \ln N$$
+> $$\sum_{p \le N} \frac{N}{p} = N \times \ln \ln N$$
 ## Spatial Complexity - O(N)
 소수 판정 테이블의 크기가 N이므로, 공간 복잡도는 N에 비례한다.
 # Summary
@@ -83,7 +87,7 @@ $$\sum_{p \le N} \frac{N}{p} = N \times \ln \ln N$$
 
 메모리 문제는 차치하고, 단순 계산 시간을 줄이기 위한 많은 최적화가 수행되었다. 다음 코드는 wheeling이라는 테크닉이 적용되어 성능이 개선된 구현이다.
 
-``` C++
+``` cpp
 #include <vector>
 
 // solver of finding prime number table

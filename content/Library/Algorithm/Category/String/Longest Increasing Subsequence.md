@@ -16,7 +16,7 @@ tags:
 
 ## Code
 
-``` C++
+``` cpp
 // size N, int array
 // std::vector<int> nums;
 
@@ -71,7 +71,7 @@ int getLISLen2(const std::vector<int> &nums)
 
 ## Naive, N ^ 2
 
-``` C++
+``` cpp
 int getLISLen1(const std::vector<int> &nums)
 {
 	const int N = nums.size();
@@ -100,7 +100,7 @@ int getLISLen1(const std::vector<int> &nums)
 i번째 원소(``nums[i]``)를 끝으로 하는 LIS의 길이(``lenOfLis[i]``)를 구하기 위해서 앞서 구한, 즉 j < i인 j에 대하여 ``nums[i] > nums[j]``를 만족하는 것 중, ``lenOfLis[j]``의 최댓값을 찾는다.
 ## Optimized, N log N
 
-``` C++
+``` cpp
 int getLISLen2(const std::vector<int> &nums)
 {
 	const int N = nums.size();

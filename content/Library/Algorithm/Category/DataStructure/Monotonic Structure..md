@@ -21,7 +21,7 @@ tags:
 ---
 # Implementation
 단조성을 해당 자료구조의 invariant로 유지하기 위해서, 새롭게 원소를 추가하는 경우, 단조성을 해치는 원소를 모두 제거한다.
-``` C++
+``` cpp
 void push_motonic_stack(std::stack<int> &st, int const data)
 {
 	// monotonic decreasing stack

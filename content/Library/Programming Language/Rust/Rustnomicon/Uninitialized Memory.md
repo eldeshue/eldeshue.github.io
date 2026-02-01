@@ -9,7 +9,7 @@ Rust에서 초기화되지 않은 메모리(uninit)를 어떻게 다루는지 �
 또 이 uninit을 다루기 위해서 도입한 MaybeUninit 래퍼의 의미와 그 사용 방법에 대해서 다룬다.
 # Uninitialized?
 문자 그대로 실제 값을 할당하지 않은 변수를 의미한다. 
-``` Rust
+``` rust
 let x : i32; // uninit
 x = 42i32;   // init
 let y = x;   // y : init, x : moved, uninit
@@ -35,7 +35,7 @@ rust 컴파일러는 정적 분석을 통해서 변수의 초기화 여부를 �
 > 참조를 통한 초기화는 무조건 drop을 수행한다.**
 
 그러나 다음과 같은 조건부 초기화의 경우에 대해서는 정적인 추적이 불가능하다. Rust는 이러한 정적 분석이 불가능한 경우에 대비하여 runtime에 초기화 여부를 추적한다. 그 예시는 다음과 같다.
-``` Rust
+``` rust
 let condition = true;
 let x;
 if condition {
@@ -54,7 +54,7 @@ Vec은 uninit한 메모리를 소유하며, runtime에 원소를 추가할 때 �
 
 그러나, 포인터를 중심으로 하는 low-level api의 사용은 여러 문제로 이어질 수 있다. 이러한 문제를 해결하기 위한 wrapper가 바로 MaybeUninit이다.
 
-``` Rust
+``` rust
 use std::mem::{self, MaybeUninit};
 
 // variadic sizable한 배열 구현
@@ -94,7 +94,7 @@ MaybeUninit은 transparent하여 uninit상태를 처리한 다음, transmute하�
 대부분의 경우 safe하게 구현된 적절한 구현(assume init 계열)이 존재하므로, 이를 사용해야 한다. 그 예시는 다음과 같다.
 ## 값 초기화 패턴
 단순한 값은 다음과 같이 `assume_init`으로 초기화 할 수 있다.
-``` Rust
+``` rust
 use std::mem::MaybeUninit;
 
 fn main() {

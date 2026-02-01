@@ -8,7 +8,7 @@ Rust에서 구현된 RAII패턴에 대하여 다룬다.
 
 # Constructor
 rust는 C++와 달리 생성자가 단 하나 존재한다.
-``` Rust
+``` rust
 struct Foo {
     a: u8,
     b: u32,
@@ -41,7 +41,7 @@ let empty = Unit; // 구조체, 필드가 없음
 # Destructor
 ## Drop
 Rust의 소멸자라 하면, scope 끝에서 자동으로 호출되는 drop 트레잇이 유일하다.
-``` Rust
+``` rust
 fn drop(& mut self)
 ```
 인자로 mutable self를 받는데, 이는 해당 객체가 소멸하기 전에 drop 이 호출됨을 의미한다. 구체적인 소멸 수행 과정은 다음과 같다.

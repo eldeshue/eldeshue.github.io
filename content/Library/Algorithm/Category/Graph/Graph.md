@@ -15,7 +15,7 @@ linked-list
 
 ## Code
 링크드 리스트마냥 노드와 포인터를 이용하여 그래프를 구현하는 것도 가능하다. 하지만, 해당 방법은 메모리 파편화와, locality로 인해서 매우 느리다. PS에서는 일반적으로 두 가지 방법(인접 행렬, 인접 리스트)으로 그래프를 구현한다.
-``` C++
+``` cpp
 
 // Adjacent Matrix
 // declaration
@@ -36,8 +36,7 @@ for (int adjNode = 0; adjNode < N; ++adjNode)
 ```
 먼저, 인접 행렬은 위와 같이 구현할 수 있다. 일반적인 환경에서 에지의 개수는 노드의 수의 제곱 이하이므로, 이러한 에지를 모두 예비한 구현이 바로 인접 행렬이다. 
 
-```C++
-
+``` cpp
 // Adjacent List
 // declaration
 std::vector<std::vector<int>> graph(N);

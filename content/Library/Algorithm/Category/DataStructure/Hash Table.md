@@ -49,7 +49,7 @@ hash function의 경우, 서로 다른 key값이 같은 해시를 갖는 문제�
 ### 해결법
 #### 1. Chaining - Array + Linked List
 hash table을 일종의 divide & conquer를 위한 filter로 바라보는 관점. 테이블의 각 자리에 단일 값 대신, subset을 저장한다. 보통 subset으로 linked list 혹은 그와 유사한 자료구조를 사용한다.
-``` C++
+```cpp
 // without chaining
 std::vector<T>;
 
@@ -66,14 +66,14 @@ insert할 때, 같은 hash를 갖는 모든 데이터를 같은 subset에 넣고
 
 >**이상적인 hash algorithm을 사용하여 최악의 경우를 피할 때, 평균 탐색 성능은 O(1)이다.**
 
-대표적으로 C++의 표준 구현체인 `unordered_map/set`이 chainging 메커니즘을 사용한다. 
+대표적으로cpp의 표준 구현체인 `unordered_map/set`이 chainging 메커니즘을 사용한다. 
 
 > Java나 C# 등의 일부 고도로 추상화 된 언어들은 **linked list 대신 검색 균형 트리를 넣는 treeing 전략**을 취하는 경우도 있음. 
 #### 2. Open Addressing
 collision이 발생했을 때, 대안이 되는 다른 주소를 찾는 방식을 open addressing이라 한다.
 ##### Avoid Collision - Double Hashing
 open addressing은 다음과 같은 방식으로 동작한다.
-``` C++
+```cpp
 #include <array>
 #include <variant>
 #include <optional>
@@ -216,7 +216,7 @@ public:
 특정 해시 알고리즘이 실행 전에 결정되어 있는 경우. uniformity나 independence를 보장하지 않는다.
 #### The Division Method
 특정 소수로 나눈 나머지를 hash로 사용하는 방법. 계산 속도는 빠르지만, uniformity나 independency가 좋지는 않다.
-``` C++
+```cpp
 // Simple example of Division Method
 #define BUCKET_SIZE 40009; // bucket size must be prime number
 
@@ -230,11 +230,11 @@ bucket size로 소수를 사용하는 이유는 불규칙성 때문이다. 합�
 
 runtime에 소수를 구하는 것은 상당히 비쌀 수 있으므로, 미리 소수 테이블을 저장하고, 이를 bucket의 size로 삼아야 하는 까다로움이 있다.
 
-대표적으로 GCC의 C++구현체에서 해당 방법에 기반한 해시 알고리즘을 사용한다.
+대표적으로 GCC의cpp구현체에서 해당 방법에 기반한 해시 알고리즘을 사용한다.
 #### The Multiplication Method
 0과 1사이의 실수를 곱한 다음, 그 소수점 아래 부분을 활용하여 해시를 만드는 방법.
 
-``` C++
+```cpp
 // simple example of Multiplication Method
 
 #define BUCKET_SIZE 40000; // bucket size가 소수가 아니어도 상관 없음.
@@ -285,7 +285,7 @@ hash combination은 복합 타입을 구성하는 각 field에 대하여 각각�
 
 나는 Rotation-XOR 방법을 주로 사용하는데, PS 등의 간단한 목적을 위해서는 충분히 유용하다.  방법은 아주 간단한데, 각 필드의 hash를 적절한 순서로 rotation shift를 수행한 다음, 이들을 모조리 xor하는 것이다.
 
-``` C++
+```cpp
 #include <unordered_set>
 #include <bit>
 
@@ -322,7 +322,7 @@ int main()
 	test.insert({ 4, 22LL, 2.5 });
 }
 ```
-Rust를 포함한 대부분의 언어, C++의 boost library에서 hash combination을 제공한다.
+Rust를 포함한 대부분의 언어,cpp의 boost library에서 hash combination을 제공한다.
 ## Tip 2 - When to use Hash Table?
 가끔 hash table을 사용하여 문제에 접근했지만, 해시 테이블의 성능으로 인해서 문제가 되는 경우가 간혹 존재한다. 해시 테이블의 사용이 문제가 될 수 있는 경우를 미리 알아보자.
 

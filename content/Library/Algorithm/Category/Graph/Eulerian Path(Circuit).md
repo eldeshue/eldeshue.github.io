@@ -30,7 +30,7 @@ tags:
 
 ## Code
 
-``` C++
+``` cpp
 
 // adjMatrix, recursive
 std::vector<int> eulerPath;

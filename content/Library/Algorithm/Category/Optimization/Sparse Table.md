@@ -15,7 +15,7 @@ tags:
 
 ## Code
 
-``` C++
+``` cpp
 // 반복횟수의 범위 1 ~ M
 // 정의역, x의 범위 1 ~ N
 // 희소배열 초기화
@@ -58,7 +58,7 @@ int query(int x, int step)
 
 ## Time Complexity - O(N log M), O( log M )
 
-``` C++
+``` cpp
 void initFn()
 {
 	for (int n = 1; n <= N; ++n)
@@ -78,7 +78,7 @@ void initFn()
 ```
 희소배열을 초기화 하는 과정에서 N log M회의 연산이 사용된다. 
 
-``` C++
+``` cpp
 // 희소배열 조합
 int query(int x, int step)
 {
@@ -94,7 +94,7 @@ int query(int x, int step)
 ```
 쿼리를 처리하는 과정에서 앞서 초기화한 희소배열을 재활용한다. 재활용 과정의 경우, 반복횟수의 비트마스크를 확인하고, 이를 조합하는 과정을 거치므로 log (M)의 비용이 든다.
 ## Spatial Complexity - O( N log  M )
-``` C++
+``` cpp
 // 희소배열 초기화
 // 반복횟수의 범위 1 ~ M
 // 정의역, x의 범위 1 ~ N

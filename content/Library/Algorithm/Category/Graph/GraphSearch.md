@@ -13,7 +13,7 @@ tags:
 
 ## Code
 ### BFS
-``` C++
+``` cpp
 // BFS, adjacent list
 
 std::vector<std::vector<int>> graph(N);
@@ -51,7 +51,7 @@ Breadth First Search는 문자 그대로 너비, 즉 인접한 노드를 우선�
 
 ---
 ### DFS
-```C++
+``` cpp
 // DFS, adjacent list, using call-stack
 
 std::vector<std::vector<int>> graph(N);

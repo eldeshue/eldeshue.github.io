@@ -19,7 +19,7 @@ tags:
 배열로 구현한 stack. stack의 끝인 top을 가리키는 포인터를 통해서 구현하였음.
 ## Code
 
-``` C++
+``` cpp
 #include <stack>
 
 std::stack<T> st;

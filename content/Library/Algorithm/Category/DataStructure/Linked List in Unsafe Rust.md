@@ -13,7 +13,7 @@ Linked List를 구현하면서 사용하게 된 Rust의 safety check와 이를 �
 > https://github.com/Yeongtong42/UnderthRust/tree/19-feat-chapter-10-linked-list/collections/list
 # Implementation of List
 링크드 리스트는 다음과 같은 형태로 구현된다.
-``` Rust
+``` rust
 pub struct List<T> {
     len: usize,
     head: Option<NonNull<Node<T>>>,
@@ -21,7 +21,7 @@ pub struct List<T> {
 }
 ```
 `List`는 T타입 데이터를 저장하는 `Node`를 관리하며, 이들은 heap에 할당되어 pointer의 형태로 관리된다. `List`는 여러 노드 중 맨 앞인 head와 맨 뒤인 tail을 제어한다.
-``` Rust
+``` rust
 pub struct Node<T> {
     data: T,
     next_node: Option<NonNull<Node<T>>>,
@@ -45,7 +45,7 @@ Rust는 이러한 문제를 해결하기 위하여 다음의 개념을 도입하
 > **소유권은 어떤 객체의 책임을 지는 단 하나의 소유주가 반드시 존재하며, 이 소유권은 객체의 수명과 함께한다.**
 
 즉, 소유권은 어떤 객체가 반드시 소속된 필드가 있어야 함을 의미한다. 
-``` Rust
+``` rust
 // MyStruct의 운명을 i와 u는 함께한다.
 // MyStruct가 i, u를 소유한다.
 struct MyStruct {
@@ -106,7 +106,7 @@ int main()
 }
 ```
 여기서 `dangle`에 대한 접근이 segfault인 이유는 dangle이 가리키는 실제 값이 더 이상 존재하지 않기 때문이다. 그렇다면, Rust에서는 어떨까?
-``` Rust
+``` rust
 // 객체 lifetime 예제
 fn main(){
 	let d : Data = Data::new();
@@ -120,7 +120,7 @@ fn main(){
 Rust는 lifetime을 바탕으로 객체 d의 생존 시한이 drop 호출에서 종료됨을 계산한다. 이후 d를 인자로 하는 do_something호출에서 lifetime에 어긋나는 호출이 있음을 감지하고, 컴파일을 거부한다.
 
 Rust 컴파일러는 이 lifetime을 내부적으로 정확하게 계산하는데, 이를 위해 lifetime 변수의 개념을 도입하였다.
-``` Rust
+``` rust
 // example from : https://doc.rust-kr.org/ch10-03-lifetime-syntax.html
 
 // x,y 중 더 긴 것의 참조를 반환하는 함수
@@ -140,7 +140,7 @@ fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
 > **Rust는 객체의 수명을 표현하는 변수를 사용하여 객체의 유효성을 검사한다.**
 
 위 예제의 경우에는 x,y 중 더 짧은 것의 수명을 `'a`로 하여 반환 된 참조의 수명으로 결정한다.  이를 통해서 다음과 같은 코드가 문제가 됨을 검사할 수 있다.
-``` Rust
+``` rust
 fn main() { 
 	let string1 = String::from("long string is long"); 
 	let result; { 
@@ -158,7 +158,7 @@ fn main() {
 
 - **한 시점에서 하나의 가변 참조(&mut)만 허용**
 - **여러 개의 불변 참조(&)는 허용하지만, 가변 참조와는 공존 불가**
-``` Rust
+``` rust
 let mut data : i32 = 44;
 
 // 대여의 두 가지 방법
@@ -180,7 +180,7 @@ let ref_mut_d : &mut i32 = &mut data;
 > **Safety는 Rust의 모든 것이다.**
 
 그러나 역설적이게도, Rust는 우리에게 이런 safety를 **포기할 수 있는 선택지를 주는 것처럼** 보이는데, 그것이 바로 **Unsafe Rust**이다. Unsafe Rust는 safety를 지키는 것으로 인해서 성능상의 문제가 발생하거나, 구현이 불가능한 경우, 이를 위해 일시적으로 Rust의 safety feature를 해제할 수 있는데, 이러한 사용 방법을 Unsafe Rust라 한다. 
-``` Rust
+``` rust
 // unsafe rust를 사용하기 위해서는 다음과 같은 unsafe block이 필요하다.
 // unsafe block 내의 구현에 대해서는 정적 분석이 동작하지 않는다.
 unsafe {
@@ -205,7 +205,7 @@ Rust에서 참조를 수행하기 위해서는 ref를 사용해왔다. ref는 bo
 그러나, 이 ref에는 몇 가지 치명적인 문제점이 존재하는데, 그중 하나가 바로 **가변 참조가 한 번에 하나만 존재할 수 있다**는 원칙이다. 이는 linked list의 구현에서 치명적인 장애로 존재한다. 이를 해결하는 여러 방법이 있지만, 가장 효율적인 방법은 raw pointer를 사용하는 것이다.
 
 raw pointer는 ref와 달리, borrow checker의 영향을 받지 않는다. 따라서, 각 Node는 pointer를 통해서 서로를 참조하여 double linked list를 구현할 수 있다.
-``` Rust
+``` rust
 // Node의 동적 할당 
 // 유니크 포인터 Box를 이용하여 heap에 Node를 동적으로 할당함.
 // into_raw를 사용하여 Box를 제거하고 Box가 가리키던 pointer를 해제하지 않고 반환
@@ -239,7 +239,7 @@ fn pop_last(&mut self) -> Result<T, &str> {
 ### PhantomData - Virtual Ownership of Rust
 팬텀 데이터란, 실제로는 해당 자원을 소유하지 않지만, 마치 해당 자원을 소유하는 것처럼 컴파일러가 인식하도록 하기 위해서 존재하는 가상의 데이터이다.
 
-``` Rust
+``` rust
 pub struct Iter<'a, T> {
     source: Option<NonNull<Node<T>>>,
     len: usize,

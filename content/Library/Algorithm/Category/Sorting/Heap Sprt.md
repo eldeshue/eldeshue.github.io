@@ -22,13 +22,13 @@ heap은 배열의 각 칸에 tree의 각 node를 저장한다.
 heap의 invariant는 **"부모가  두 자식보다 큰 값을 갖는다."** 이다. 이러한 invariant가 tree가 갖는 재귀적 성질로 두 자식을 root로 하는 각각의 subtree에 대해서도 적용되면서 heap의 root에 가장 큰 값이 남는다.
 ## Algorithms
 ### get_parent
-``` Rust
+``` rust
 fn get_parent(node : i32) -> i32 {
 	node >> 1
 }
 ```
 ### get_children
-``` Rust
+``` rust
 fn get_left_child(node : i32) -> i32 {
 	node << 1
 }
@@ -39,7 +39,7 @@ fn get_right_child(node : i32) -> i32 {
 ```
 ### heapify
 heap의 invariant를 유지하는 알고리즘,  heap의 모든 기능은 이 알고리즘에 기반하여 동작한다.
-``` C++
+``` cpp
 void heapify(std::vector<int> heap, int const cur_node) {
 	int const left = get_left_child(cur_node);
 	int const right = get_right_child(right);

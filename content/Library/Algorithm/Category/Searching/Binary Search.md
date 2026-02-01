@@ -17,7 +17,7 @@ tags:
 
 이진탐색의 구현은 대략 다음과 같다.
 
-``` C++
+``` cpp
 // from start to end, search int value n's position
 // [startIdx, endIdx], both included
 int binarySearch(const std::vector<int> &vec, int startIdx, int endIdx, int val)
@@ -46,7 +46,7 @@ int binarySearch(const std::vector<int> &vec, int startIdx, int endIdx, int val)
 
 c++ std라이브러리 중 algorithm에는 이진 탐색 함수가 존재하며, 이는 다음과 같다.
 
-```C++
+``` cpp
 #include <algorithm>
 
 template <class ForwardIt, class T, class Compare>

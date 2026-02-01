@@ -31,7 +31,7 @@ divide 과정에서 분할한 두 배열은 재귀 호출 과정에 의해서 �
 ## Code
 https://github.com/Yeongtong42/UnderthRust/blob/main/algorithms/sort/merge_sort/src/lib.rs
 
-``` Rust
+``` rust
 // implementation of non-recursive merge sort
 pub fn merge_sort_by<T, F>(slice: &mut [T], mut comp: F)
 where

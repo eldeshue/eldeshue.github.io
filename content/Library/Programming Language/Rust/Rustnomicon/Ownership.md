@@ -9,7 +9,7 @@ Rust의 핵심 기능인 Ownership과 그에 관련된 Rustnomicon의 여러 내
 이 글에서 사용하는 모든 예제는 Rustnomicon에서 가져왔거나 일부 변형한 것이다.
 # Aliasing
 Rust에서는 다음과 같은 경우에 대하여 aliased되었다고 본다.
-``` Rust
+``` rust
 let data : SomeType = SomeType::new();
 let ref = &data;
 let aliased = ref;    /// ref의 alias 
@@ -46,14 +46,14 @@ Rust의 근간을 이루는 여러 법칙은 결국 이 lifetime이라는 개념
 불연속은 re-borrow때문이며, 비선형성은 분기 때문에 발생한다.
 ## Local Lifetime의 시각화
 Rustnomicon에 따르면 수명은 다음과 같은 방식으로 시각화 할 수 있다. 다음은 여러 한 변수에 대해서, 이를 참조하는 여러 참조의 생성에 관한 예제이다.
-``` Rust
+``` rust
 // from rustnomicon, simple let statement
 let x = 0;
 let y = &x;
 let z = &y;
 ```
 위 예제에 대하여 수명을 시각화 하면 다음과 같다.
-``` Rust
+``` rust
 // from rustnomicon, visualization of lifetime
 // 주의: `'a: {` 나 `&'b x` 는 유효한 문법이 아닙니다!
 'a: {
@@ -70,14 +70,14 @@ let z = &y;
 
 ## 함수의 Lifetime 시각화
 다음의 `as_str` 함수는 한 `u32`변수를 format으로 가공하여 `&str`로 반환한다.
-``` Rust
+``` rust
 fn as_str(data: &u32) -> &str {
     let s = format!("{}", data);
     &s
 }
 ```
 이 함수에 lifetime을 표시하면 다음과 같다.
-``` Rust
+``` rust
 fn as_str<'a>(data: &'a u32) -> &'a str {
     'b: {
         let s = format!("{}", data);
@@ -90,7 +90,7 @@ fn as_str<'a>(data: &'a u32) -> &'a str {
 여기서 반환하는 `&str`인 `s`가 가라키는 `String`의 lifetime은 `'b`인데, 이는 `data`의 lifetime인 `'a`보다 짧다. 그러므로, `s`의 수명은 `'a`가 될 수 없다. 수명의 확장은 불법이다.
 ## lifetime의 끝 - 소멸 시점
 기본적으로 수명은 해당 객체가 마지막으로 사용된 위치에서 끝난다.
-``` Rust
+``` rust
 let mut data = vec![1, 2, 3];
 let x = &data[0];
 println!("{}", x);  // <- 참조 x의 마지막 사용, 여기서 x의 수명 종료
@@ -98,7 +98,7 @@ println!("{}", x);  // <- 참조 x의 마지막 사용, 여기서 x의 수명 �
 data.push(4); // 따라서 여기서 &mut data를 사용할 수 있음.
 ```
 그러나, `Drop` 트레잇을 구현한 경우 그 lifetime은 scope의 종료까지 연장된다.
-``` Rust
+``` rust
 #[derive(Debug)]
 struct X<'a>(&'a i32);
 
@@ -118,7 +118,7 @@ impl Drop for X<'_> {
 ```
 ## 비선형 lifetime
 다음의 경우 분기에 따라서 참조 `x`의 마지막 사용 위치가 달라진다. 따라서 수명은 비선형이다.
-``` Rust
+``` rust
 let mut data = vec![1, 2, 3];
 let x = &data[0];
 
@@ -135,7 +135,7 @@ if some_condition() {
 ```
 ## 불연속 lifetime
 다음의 경우 reborrow가 발생하여 lifetime이 끊기는 경우에 대한 예제다. 이 때 borrow 당한 참조의 유효성(lifetime)은 borrow한 참조가 소멸할 때 까지 일시적으로 정지된다. 따라서 lifetime은 불연속일 수 있다.
-``` Rust
+``` rust
 let mut x = 10;
 
 let r = &mut x;   // r: &mut i32 (x에 대한 배타적 접근권 확보)
@@ -152,7 +152,7 @@ println!("변경 후: {}", r);
 ```
 ## 무제한(Unbounded) Lifetime
 특정한 방법으로 얻어진 참조는 무제한 lifetime을 가질 수 있음. 무제한 수명은 `'static`과 유사하며, 얻어온 참조의 원본이 정상적이지 않은 경우에 해당한다. 대표적인 예가 다음과 같음.
-``` Rust
+``` rust
 fn get_str<'a>(s: *const String) -> &'a str {
     unsafe { &*s } // pointer로 부터 얻어낸 참조
 }
@@ -173,7 +173,7 @@ fn main() {
 HRTB은 Higher Rank Trait Bound의 약자로, 기존의 타입에 대해서 Trait에 대한 제약만 거는 trait bound에 대하여 lifetime의 조건을 추가한 것이다. lifetime에 대하 제약을 거는 것은 보다 고등한(Higher Rank)한 것으로 보여서 이러한 이름을 얻은 것으로 보인다. 
 
 HRTB는 callable을 만드는 다음과 같은 경우에 주로 사용된다.
-``` Rust
+``` rust
 fn call_with_str<F>(f: F)
 where
     F: Fn(&str) -> &str
@@ -183,7 +183,7 @@ where
 }
 ```
 위 에제에서는 trait bound를 통해서 특정 트레잇을 구현한 어떠한 타입만 전달받을 수 있는 함수 제네릭을 구현했다. 그러나, 이 예제에서 보이듯이 Fn 트레잇은 그 정보가 충분하지 않은데, 여기에는 lifetime에 대한 정보가 결여되어 있다. f가 callable이고, 그 시그니쳐와 반환값 사이의 lifetime이 명시되지 않았다. 이러한 lifetime 정보를 명시하고자 한다면, 다음과 같이 HRTB, 즉 `for<'a>` 를 사용한다.
-``` Rust
+``` rust
 fn call_with_str<F>(f: F)
 where
     F: for<'a> Fn(&'a str) -> &'a str
@@ -201,7 +201,7 @@ drop checker는 컴파일러의 일부분으로, 어떤 타입의 `Drop`트레�
 > **Drop checker는 어떤 타입 A에 대하여, A의 필드로 있는 모든 참조의 원본이 A보다 오래 살도록 강제한다.**
 
 이에 대한 예시는 다음과 같다.
-``` Rust
+``` rust
 struct Inspector<'a>(&'a u8);
 
 impl<'a> Drop for Inspector<'a> {
@@ -228,7 +228,7 @@ fn main() {
 위 예제에서는 Drop checker의 존재 이유에 대해서 보여주고 있다. `World`의 필드인 `days`가 먼저 소멸하고, 이후 `inspector`가 소멸하여 그 소멸자가 호출된다고 하면, `Inspector<'a>`의 drop이 호출되며, 삭제된 days를 참조하게 된다. 이는 Rust가 허용할 수 없는 상황이다. 따라서, 이러한 상황을 예방하기 위해 `inspector`는 `days`보다 무조건 오래살도록 강제되어야 한다.
 
 그러나 이 조건은 지나치게 엄격한 부분이 있는데, 다음 예제가 이를 잘 보여준다.
-``` Rust
+``` rust
 struct Inspector<'a>(&'a u8, &'static str);
 
 impl<'a> Drop for Inspector<'a> {
@@ -258,7 +258,7 @@ fn main() {
 따라서 Drop Checker는 그 건전성을 위해서 과하게 엄격하지만, 필드로 갖는 모든 참조의 수명이 그 자신보다 무조건 길도록 강제한다. 
 ## may_dangle
 Drop Checker의 동작에 예외를 주기 위하여, 특정 lifetime 변수에 `may_dangle`속성을 부여할 수 있다. 이 속성이 부여된 lifetime을 갖는 변수는 drop checker의 참조 수명 검사에서 예외로 처리된다.
-``` Rust
+``` rust
 #![feature(dropck_eyepatch)]
 
 struct Inspector<'a>(&'a u8, &'static str);
@@ -292,7 +292,7 @@ fn main() {
 이러한 가상의 데이터가 필요한 이유 중 하나는 **타입에 lifetime이라는 중요한 메타정보가 포함**되기 때문이다. 그러나, 구현 상으로는 해당 정보를 표현할 방법이 없을 때, 이 `PhantomData`를 통해서 추가적인 정보를 넣어줄 수 있다.
 
 대표적인 예시가 다음과 같은 이터레이터의 구현이다.
-``` Rust
+``` rust
 use std::marker;
 
 struct Iter<'a, T: 'a> {

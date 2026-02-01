@@ -14,7 +14,7 @@ tags:
 # Implementation
 ## Code
 
-``` Rust
+``` rust
 /// median of medians 알고리즘을 기반으로 n번째로 작은 값을 슬라이스의 n번째 인덱스로 이동시킵니다.
 ///
 /// 최악의 경우에도 O(N) 시간복잡도를 보장합니다.
@@ -97,7 +97,7 @@ Median of Medians(이하 MoMs)는 "중간 값들의 중간 값"이라는 뜻으�
 구체적인 수행 과정은 다음과 같다. 
 #### 1. Slice size adjustment
 주어진 slice를 일정한 크기의 그룹으로 분할하기 위해서, 그룹으로 분할하고 남는 나머지를 정리해줄 필요가 있다. 따라서 이들 나머지를 slice의 한 쪽 끝으로 정렬한다.  
-``` Rust
+``` rust
 	// step 1, Size adjustment
     while ((r - l) % 5) != 0 {
         for i in (l + 1)..r {
@@ -120,7 +120,7 @@ Median of Medians(이하 MoMs)는 "중간 값들의 중간 값"이라는 뜻으�
 selection의 범위 내의 원소를 크기 5인 그룹으로 나눈다. 여기서 그룹은 인덱스를 `num_group`으로 나눈 나머지가 같은 것을 하나의 그룹으로 삼는다. 이렇게 분할하면 각 그룹은 불연속하게 위치하지만, `num_group`을 stride로 하여 일정하게 떨어져 있게 된다.
 #### 3. Sort Group
 앞서 분할한 각 group을 정렬한다. 한 그룹의 원소는 5개로 구성된다.
-``` Rust
+``` rust
 let num_group = (r - l) / 5;
     for start in l..(l + num_group) {
         sort_five_in_place_with_stride(slice, start, num_group);
@@ -129,7 +129,7 @@ let num_group = (r - l) / 5;
 각 그룹을 정렬했으므로, 각 그룹의 3번째 원소는 중간 값이 된다.
 #### 4. select median of medians
 앞서 각 그룹을 정렬한 결과 3번째 원소는 중간 값이 된다. 그 결과, slice의 `l+2*num_group..l+3*num_group`은 각 group의 중간 값들만 모은 새로운 group이 된다. 여기서 재귀적으로 selection을 수행, 다시 한 번 중간 값을 탐색한다.
-``` Rust
+``` rust
 // get pivot using median of median
     // select median group
     select_nth_elem_strict(
@@ -150,7 +150,9 @@ let num_group = (r - l) / 5;
 여기서 푸른 색으로 표현된 영역은 x보다 작거나 같은 값들의 영역이며, 노란 색으로 표현된 영역은 x보다 크거나 같은 영역이다. 따라서, 이 MoMs로 선택한 pivot인 x는 최악의 경우에도 3/10은 배제할 수 있게 된다. **다시 말하자면, MoMs의 pivot으로 인해서 매 재귀 호출은 탐색 범위를 7/10이하로 줄이는 효과를 얻을 수 있다.**
 
 이를 slice size에 대한 등비수열로 접근, 등비수열의 무한 합을 취하면 최종 시간 복잡도는 다음과 같다.
-$$\sum_{i=0}^{\inf} N ({7 \over 10})^i = N{10 \over 3}$$
+
+> $$\sum_{i=0}^{\inf} N ({7 \over 10})^i = N{10 \over 3}$$
+
 따라서, MoMs로 인한 최종 시간 복잡도는 `O(N)`이다.
 ## Spatial Complexity - worst O(N)
 입력의 크기와 관련된 그 어떠한 공간도 추가로 할당하지 않으므로, 각 호출은 O(1)의 공간 복잡도를 갖는다. 

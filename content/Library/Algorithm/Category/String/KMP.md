@@ -13,7 +13,7 @@ tags:
 // 여기에 이미지 삽입
 ## Code
 
-``` C++
+``` cpp
 #include <string>
 #include <vector>
 
@@ -92,7 +92,7 @@ public:
 
 KMP 알고리즘은 두 개의 함수로 구성된다. 
 ### Failure Function
-```C++
+``` cpp
 // failure function
 KMP(std::string_view heystack, std::string_view needle) : s(heystack), w(needle), t(needle.size() + 1, 0)
 {
@@ -128,7 +128,7 @@ kmp를 수행하기 위해서는 먼저 failure function을 수행하여 table `
 
 ---
 ### Search Function
-```C++
+``` cpp
 // search function
 std::vector<int> operator()()
 {

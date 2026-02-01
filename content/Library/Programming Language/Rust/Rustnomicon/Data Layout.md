@@ -9,8 +9,7 @@ C/C++와 유사하게 Rust또한 low-levle에 접근이 가능한 언어이다. 
 rust에서 어떤 custom data type에 대한 memory layout을 조작할 때, 주의해야 할 내용을 다룬다.
 # repr
 `repr`은 데이터 레이아웃을 의미하는 rust의 지시자이다. 흔히 다음과 같이 사용된다.
-``` Rust
-
+``` rust
 #[repr(KeyWord)]
 struct MyData {
 	// ...
@@ -49,7 +48,7 @@ Rust에서는 두 가지 대표적인 DST가 존재한다.
 > **DST는 size를 알 수 없기 때문에 참조의 형태로만 사용되어야 한다.**
 
 [Rustnomicon](https://doc.rust-lang.org/nomicon/exotic-sizes.html)에 의하면 DST 자체로는 큰 의미가 없으며, 다음과 같은 방식으로 upcasting할 수 있음이 알려져 있다.
-``` Rust
+``` rust
 struct MySuperSliceable<T: ?Sized> { // ?Sized 라는 표현이 T가 DST임을 의미함
     info: u32,
     data: T, // DST인 필드는 struct의 마지막에만 위치할 수 있다. 어찌보면 당연하다.
@@ -72,7 +71,7 @@ fn main() {
 Rust에는 marker를 비롯하여 사상적으로만 존재하고, 메모리를 점유하지 않는, zero sized type이 여럿 존재한다. 
 
 ZST에는 다음과 같은 경우가 있다.
-``` Rust
+``` rust
 // C와는 다르게 선언과 구현의 구분이라는 개념이 없음.
 // 필드가 존재하지 않으므로, 크기는 0임.
 struct ZeroSizedType1;

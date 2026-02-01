@@ -1,6 +1,7 @@
 ---
 Date: 2025-11-14
 tags:
+publish: "true"
 ---
 # Overview
 GraphRunner 프로젝트의 Resource와 이를 관리할 Resource Manager에 대해서 정리한다.

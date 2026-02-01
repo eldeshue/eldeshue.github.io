@@ -1,6 +1,7 @@
 ---
 Date: 2025-09-07
-title: Feature Overview
+title: Feature
+publish: "true"
 ---
 # Feature
 구현된 기능에 대한 간략한 overview.

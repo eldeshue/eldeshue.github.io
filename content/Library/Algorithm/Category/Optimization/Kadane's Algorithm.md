@@ -12,7 +12,7 @@ tags:
 
 ## Code
 
-``` C++
+``` cpp
 // BOJ 1912
 // Kadane's algorithm을 이용한 풀이
 #include <iostream>

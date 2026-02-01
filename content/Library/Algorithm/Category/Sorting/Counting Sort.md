@@ -12,7 +12,7 @@ tags:
 https://github.com/Yeongtong42/UnderthRust/blob/main/algorithms/sort/counting_sort/src/lib.rs
 ## Code
 
-``` Rust
+``` rust
 
 impl<T> CountingSort for &mut [T]
 where

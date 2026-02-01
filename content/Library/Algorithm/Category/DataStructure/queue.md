@@ -18,7 +18,7 @@ tags:
 배열로 구현한 queue.  queue의 양 끝을 가리키는 두 포인터인 head와 tail를 통해서 구현하였음. 이 head와 tail은 circular하게 움직이며, queue의 size는 정적 배열의 크기에 의해서 결정됨. 이러한 구현을 circular-queue라 한다.
 ## Code
 
-``` C++
+``` cpp
 #include <queue>
 
 std::queue<T> q;

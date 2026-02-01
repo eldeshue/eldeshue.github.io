@@ -16,7 +16,7 @@ naive하게 생각하면, 주어진 배열을 **정렬**하는 것으로 문제�
 # Implementation
 ## Code
 
-``` Rust
+``` rust
 /// 슬라이스에서 n번째로 작은 값을 n번째 인덱스로 이동시킵니다.
 ///
 /// 이 알고리즘은 Quick Select를 기반으로 하며,
@@ -68,7 +68,7 @@ select 알고리즘은 전체 slice를 정렬하는 것이 아닌, 탐색 목표
 
 select 알고리즘은 [[Divide and Conquer]]의 일종으로, 다음과 같은 과정을 거친다.
 ### 1. Base Case
-``` Rust
+``` rust
 let len = slice.len();
     if len == 0 || len <= n {
         return;
@@ -76,7 +76,7 @@ let len = slice.len();
 ```
 더 이상 분할이 불가능한 상태이므로, 이탈한다. 또한 탐색 목표인 n이 slice의 크기보다 크므로 배제한다.
 ### 2. Divide
-``` Rust
+``` rust
  // hoare's partition
     // slice를 pivot 인덱스의 값을 기준으로 좌우로 분할합니다.
     // 작거나 같은 값은 왼쪽으로, 큰 값은 오른 쪽으로...
@@ -84,7 +84,7 @@ let len = slice.len();
 ```
 random_range로 얻어낸 pivot을 기준으로 slice를 partition한다. 분할 후 pivot에 해당하는 원소의 위치가 `pivot_idx`가 된다.  이 `pivot_idx`를 기준으로 문제를 분할한다.
 ### 3. Conquer
-``` Rust
+``` rust
  // pivot is not an answer
     if pivot_idx != n {
         // divide

@@ -18,8 +18,7 @@ tags:
 
 ## Code
 
-``` C++
-
+``` cpp
 #include <vector>
 #include <queue>
 
@@ -140,7 +139,7 @@ public:
 트리에서 root를 향해 거슬러 오르는 과정을 최적화 하기 위해서 sparse table을 활용한다. 최악의 경우는 트리가 일렬로 늘어진 모양으로, 그 depth가 최대 N이 되며, 이는 곧 최대 반복 횟수로 N이다. 따라서 sparse table에 의해서 O(N log N)이 된다.
 
 ## Time Complexity - O(N log N), O ( log N)
-``` C++
+``` cpp
 // init sparsetTree
 LCATree(const int N, const Graph &g) : size(N), lgSize(log2(N) + 1), sparseTable(lgSize + 1, std::vector<int>(size + 1, 0)),
 										   graph(g), parent(sparseTable[0]), depth(N + 1, 0)
@@ -156,7 +155,7 @@ LCATree(const int N, const Graph &g) : size(N), lgSize(log2(N) + 1), sparseTable
 ```
 앞서 밝힌 바에 따라서 sparse table을 초기화 하므로, 그 비용은 O(N log N)이다. 비록 부모 노드를 기록하기 위해서 bfs를 1회 수행하지만, 이는 dominant하지 않으므로 생략된다.
 
-``` C++
+``` cpp
 	// find LCA node of node1 and node2
 	int queryLCA(int node1, int node2)
 	{

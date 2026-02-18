@@ -21,8 +21,11 @@ Date:
 - [solved.ac](https://solved.ac/) 레이팅 사이트 존재
 
 > [!Note] 2026.02.01 기준 
+> 
 > solved.ac 레이팅 : Diamond-V (상위 0.8%)
+> 
 > streak : 970
+> 
 > 푼 문제 수 : 1128
 
 ---

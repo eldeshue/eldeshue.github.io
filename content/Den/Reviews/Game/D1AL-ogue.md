@@ -4,6 +4,7 @@ tags:
   - SF
   - CyberPunk
   - Android
+  - 게임
 ---
 # Overview
 게임, [D1AL-ogue](https://store.steampowered.com/app/4270390/D1ALogue/)에 대한 리뷰이다.

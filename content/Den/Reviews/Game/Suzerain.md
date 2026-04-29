@@ -4,6 +4,7 @@ tags:
   - 정치
   - 철학
   - 사회
+  - 게임
 ---
 # Overview
 게임 [Suzerain](https://store.steampowered.com/app/1207650/Suzerain/)

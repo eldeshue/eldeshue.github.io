@@ -66,10 +66,10 @@ proc_info_list 등의 정적 데이터는 커널 빌드에서 들어간 값으�
     - x86-64라면 long mode
     - ARM이라면 적절한 exception level / MMU 상태 등
 - 메모리 초기화
-	- 동적 메모리 할당(커널 이미지 위치 계산을 위한 간단한 vm, page tablr구현)
+	- 동적 메모리 할당(커널 이미지 위치 계산을 위한 간단한 vm, page table구현)
 	- 최소한의 스택
 	- BSS가 초기화
-	- early page table
+	- early page table: MMU 활성화 후, 주소 변환을 위해서 반드시 필요하다
 - 커널 커맨드라인 전달
 - initrd/initramfs 위치 정보 전달(커널 초기화 중 마운트 필요)
 - 메모리 맵 정보

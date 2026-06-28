@@ -29,7 +29,12 @@ start_kernel은 리눅스 커널의 부팅 과정 중, cpu와 memory, scheduler 
 
 아키텍쳐에 따라서 구현이 크게 달라지지만, 대체적으로 다음의 내용을 수행한다.
 
-- [[arm32 - setup_processor | setup_processor]] : 프로세서 초기화, 커널이 해당 프로세서의 기능을 인식하게 되며, 커널 코드가 프로세서를 통제할 수 있게 된다.
+- 프로세서 초기화 : 커널이 해당 프로세서의 기능을 인식하게 되며, 커널 코드가 프로세서를 통제할 수 있게 된다.
+	- [[arm32 - setup_processor]] 
+- 메모리 초기화: memblock_init 및 paging_init을 통해서 커널이 주어진 메모리를 인식하고, 이를 바탕으로 구체적인 메모리 관리를 시작한다. 
+	- [[arm64_memblock_init]]
+	- [[paging_init]]
+	- memblock_init
 # Summary
 
 # Reference

@@ -15,17 +15,21 @@ tags:
 
 > memblock 구현 분석은 [[memblock|여기]]에서
 
-하나 주의할 점은 해당 함수는 memblock의 region을 채우지 않는다. 모든 최초 region은 device tree를 해석하는 과정에서 이미 추가되었고, 이 함수는 kernel이 관리할 수 있는 범위로 **재단**한다.
+해당 함수는 이미 memblock에 채워진 region에 대해 linear map을 설정한다. 특히 주요 보존 위치에 대해서 reserve를 수행한다. 
+# Pre-requisite: linear map
+linear map은 가상 메모리의 한 종류로, **물리메모리와 선형으로 연속되게 매핑**하는 영역이다. 선형으로 매핑된다 함은, offset 계산으로 매핑함을 뜻하며, 주소 변환 방식은 다음과 같다.
+$$
+VAlinear=PAGE\_OFFSET+(PA−memstart\_addr)
+$$
+즉, 변환을 위한 offset만 구하면 즉시 물리-가상 전환이 가능하다. 이러한 특성 탓에 **direct map**이라고 불리기도 한다.
+
+**linear map은 오직 DRAM**만 취급하며, 메모리 매핑 IO(MMIO)이나 불연속 매핑을 위한 vmalloc, 등을 위한 가상 주소는 linear map에서 관리하지 않는다. 다만, vmalloc이 linear map을 다시 한 번 매핑하여 사용할 수는 있다. 
 # Contents
+## 0. mental model - sliding window
+memblock_init에서 초기화하는 **linear map은 sliding window로 모델링** 할 수 있다. linear map 영역의 크기는 vabits에 의해 고정되어 있으며, 여러 필요에 의해 그 위치가 이동하기 때문이다.
 ## 1. linear map 크기 계산
-가장 먼저 linear map 영역 크기를 계산한다. 
-
-linear map은 가상 메모리의 한 종류로, 물리 메모리와 **연속적으로 매핑**된 구간이다. 해당 가상 주소는 시작 물리 주소와 offset만 알면, 단순 덧셈으로 물리 주소를 알 수 있다.
-
-커널은 이 linear map 영역을 특수하게 관리하며, 이를 위한 주소공간을 지정해서 운영하는데, 그 영역의 크기를 계산하는 것이다.
-
-계산 식은 다음과 같다.
-``` C
+가장 먼저 linear map 영역 크기를 계산한다. 계산 식은 다음과 같다.
+``` c
 s64 linear_region_size = PAGE_END - _PAGE_OFFSET(vabits_actual);
 ```
 단순히 linear map의 끝 주소에서 시작 주소를 빼서 그 크기를 구한다.
@@ -33,11 +37,11 @@ s64 linear_region_size = PAGE_END - _PAGE_OFFSET(vabits_actual);
 먼저 vabits_actual은 1워드 중, 실제 주소를 표현하는 데에 쓰는 bit의 수다. vabits_actual값이 48이라면, 64bit 중 48bit는 주소를, 나머지 16bit는 권한이나 보안 기능 구현에 사용된다.
 
 \_PAGE_OFFSET() 매크로의 역할은, 정수를 받아서 해당 번째 비트 이상을 마스킹하는 값을 만드는것이다. 정의는 다음과 같다.
-``` C
+``` c
 #define _PAGE_OFFSET(va) (-(UL(1) << (va)))
 ```
 여기서 -를 곱한다는 것은, 모든 비트를 flip하고 1을 더하는 것이다. 따라서 val만큼 1을 shift한 다음, 모든 비트를 반전하고, 다시 1을 더한다.
-``` C
+``` c
 int const val = 4;
 ((char)(1) << val) ==  0b00010000;
 -((char)(1) << val) == 0b11101111 + 1 == 0b11110000;
@@ -49,22 +53,26 @@ int const val = 4;
 -> 0xffff_0000_0000_0000;
 ```
 마찬가지 방식으로 매크로 정의된 `PAGE_END`도 계산할 수 있다.
-``` C
+``` c
 PAGE_END == -(1 << (48 - 1)) == 0xffff_8000_0000_0000;
 ```
 단순 계산으로는 -2^47 + 2^48이므로, 크기는 2^47이다.
 
 이러한 방식으로 linear map 영역의 주소가 설정된 이유는 커널이 가상 주소의 특정 비트를 보고 해당 주소가 어떤 위치(유저, 커널, 커널의 특정 영역, 등)의 메모리인지 구분하기 때문이다.
+
+> 즉, linear map을 매핑한 window의 size를 계산한다.
 ## 2. 표현할 수 없는 주소의 ram 제거
 CPU가 주소 범위로는 사용할 수 없는 만큼의 ram을 탑재한 경우(va bits를 초과), 초과분을 포기한다. memblock에서는 다음과 같이 제거된다.
-``` C
+``` c
 memblock_remove(1ULL << PHYS_MASK_SHIFT, ULLONG_MAX);
 ```
 여기서 `PHYS_MASK_SHIFT`는 유효한 물리 주소 범위(하위 비트 수)를 의미하며, 유효 범위 이상의 ULLong의 최댓값만큼(즉 모두)을 memblock에서 제외함을 뜻한다.
 
 `memblock_remove`함수는 내부적으로 `memblock_remove_rnage`함수를 호출하며, `memblock_isolate_range`를 호출하여 기존 region을 쪼개고, 이후 `memblock_remove_region`를 호출하여 범위를 넘는 region을 제거한다.
+
+> 앞서 계산한 window size를 바탕으로 window의 끝을 결정한다.
 ## 3. linear map의 시작 위치 계산
-``` C
+``` c
 memstart_addr = round_down(memblock_start_of_DRAM(),
                            ARM64_MEMSTART_ALIGN);
 ```
@@ -73,12 +81,14 @@ D램의 시작 위치를 읽어온 다음, alignment를 맞춰서 시작 위치�
 실제 Dram의 물리주소는 0부터 바로 사용할 수는 없다. 따라서, 0이 아닌 임의의 물리 주소가 매핑되어야 하는데, alignment를 지켜줘야 하므로, round down을 수행한다.
 
 round up을 할 경우, 일부 주소를 사용할 수 없게 되어버린다.
+
+> window의 시작을 결정한다.
 ## 4. 커널 바이너리 위치에 따른 linear map 위치 조정
 커널 바이너리는 반드시 reserve로 보호해야 하므로, linear map 영역에 포함되어야만 한다.
 따라서 다음과 같은 보정을 수행한다.
 
 먼저 linear map에 넣을 수 없을 만큼 큰 메모리를 탑재한 경우, 다음과 같은 방법으로 버린다. 여기서 버릴 때, 커널 바이너리의 위치를 고려한다.
-``` C
+``` c
 memblock_remove(max_t(u64, memstart_addr + linear_region_size,
 			__pa_symbol(_end)), ULLONG_MAX); // 초과된 메모리 버림
 // 초과 메모리를 버릴 때, 커널 바이너리를 지켜야 하므로, _end에 대한 max를 수행한다.
@@ -96,7 +106,7 @@ if (memstart_addr + linear_region_size < memblock_end_of_DRAM()) {
 `__pa_symbol(_end)`는 커널 바이너리의 끝 주소를 의미하며, 이를 지키기 위해 max값을 취하기 때문에 linear_region_size보다 크게 잡힐 수 있다. 이 경우 memstart_addr을 당겨올려서 그 크기를 맞춰준다.
 
 이후 부트 옵션(커널 파라미터)에 의해 설정된 메모리 상한(memory_limit)이 존재한다면, 이를 반영한다. 여기서도 마찬가지로 커널 바이너리의 위치가 limit에 걸릴 경우를 고려해서 확장한다.
-``` C
+``` c
 	/*
 	 * Apply the memory limit if it was set. Since the kernel may be loaded
 	 * high up in memory, add back the kernel region that must be accessible
@@ -109,9 +119,11 @@ if (memstart_addr + linear_region_size < memblock_end_of_DRAM()) {
 		memblock_add(__pa_symbol(_text), (resource_size_t)(_end - _text));
 	}
 ```
+
+> linear map이 kernel을 반드시 포함해야 하므로, window의 위치를 이동한다.
 ## 5. initrd 처리
 initrd는 init ram disk의 약자로, 부팅 시 사용할 시스템 바이너리이다. 이는 부팅에서 필수적인 영역으로 반드시 보존해야 한다. 따라서 다음을 수행한다.
-``` C
+``` c
 // 커널 config에 의한 initrd 사용 여부 및 size확인
 if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && phys_initrd_size) {
 		// 시작 위치 확인
@@ -137,14 +149,14 @@ if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && phys_initrd_size) {
 			memblock_reserve(base, size);
 		}
 	}
-
 ```
+
+> 마찬가지로 initrd를 위해 window를 이동하고, reserve 처리한다.
 ## 6. 커널 이미지 보호
 initrd에 이어서 커널 이미지도 보호한다.
-``` C
+``` c
 	// 커널 이미지 영역을 reserve 처리
 	memblock_reserve(__pa_symbol(_text), _end - _text);
-	
 ```
 ## 7. memblock의 initrd 위치를 가상 주소로 변환
 ``` C
@@ -168,10 +180,12 @@ early_init_fdt_scan_reserved_mem();
 해당 device tree의 내용은 하드웨어에 특화된 부분이며, firmware 메모리, DMA 영역, secure world, 등이다.
 # Summary
 즉, 이 함수는 커널 바이너리와 initrd를 지키면서 linear map을 초기화 하고, 부트로더가 DT로 전달한 반드시 보존해야 하는 메모리 영역을 memtype reserved로 보호한다. 
+
+이 linear map 영역은 일종의 고정된 size의 window이며, size는 vabits로 결정되고, window의 위치는 사용 가능한 DRAM 중, kernel과 initrd를 반드시 덮는 위치로 한다.
 # Reference
 - 분석은 [여기](https://elixir.bootlin.com/linux/v6.18/source/arch/arm64/mm/init.c#L185)에서 했음.
 - [전체 코드](https://github.com/torvalds/linux/blob/v6.18/arch/arm64/mm/init.c)는 다음과 같다.
-``` C
+``` c
 // linux kernel, 6.18 
 void __init arm64_memblock_init(void)
 {

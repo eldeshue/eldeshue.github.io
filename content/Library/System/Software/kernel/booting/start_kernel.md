@@ -34,7 +34,7 @@ start_kernel은 리눅스 커널의 부팅 과정 중, cpu와 memory, scheduler 
 - 메모리 초기화: memblock_init 및 paging_init을 통해서 커널이 주어진 메모리를 인식하고, 이를 바탕으로 구체적인 메모리 관리를 시작한다. 
 	- [[arm64_memblock_init]]
 	- [[paging_init]]
-	- memblock_init
+	- bootmem_init
 # Summary
 
 # Reference

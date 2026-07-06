@@ -27,7 +27,7 @@ $$
 
 **linear map은 오직 DRAM**만 취급하며, MMIO나 불연속 매핑을 위한 vmalloc, 등을 위한 가상 주소는 **linear map에서 관리하지 않는다**. 다만, vmalloc이 linear map을 다시 한 번 매핑하여 사용할 수는 있다. 
 
-> 메모리 관련 개념은 [[물리 메모리 VS 가상 메모리]] 정리 참고
+> 메모리 관련 개념은 [[가상 메모리]] 정리 참고
 # Contents
 ## 0. mental model - sliding window
 memblock_init에서 초기화하는 **linear map은 sliding window로 모델링** 할 수 있다. linear map 영역의 크기는 vabits에 의해 고정되어 있으며, 여러 필요에 의해 그 위치가 이동하기 때문이다.

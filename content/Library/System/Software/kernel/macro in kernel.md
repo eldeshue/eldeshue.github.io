@@ -32,6 +32,20 @@ tags:
 ``` 
 
 앞서 살펴본 offsetof 매크로를 활용, 현재 필드의 주소에서 오프셋을 빼서 원본 구조체의 시작 위치, 해당 타입의 포인터를 구한다.
+## SYSCALL_DEFINE
+커널에서 system call handler의 시그니쳐는 매크로로 선언된다. 그 형태는 대략 다음과 같다.
+``` c
+// kernel/fork.c
+SYSCALL_DEFINE5(clone,
+	unsigned long, clone_flags,
+	unsigned long, newsp,
+	int_user *, parent_tidptr,
+	unsigned long, tls,
+	int_user*, child_tidptr
+	)
+```
+맨 앞의 clone은 syscall의 이름을 구분하는 필드이고, 실제 인자는 5개이다.
+
 # Summary
 
 # Reference

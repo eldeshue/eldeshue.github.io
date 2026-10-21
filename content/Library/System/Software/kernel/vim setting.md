@@ -167,10 +167,17 @@ set path+=include/generated
 - cscope
 - grep / ripgrep
 ```text
-<leader>q     :copen
-<leader>n     :cnext
-<leader>p     :cprev
+<leader>qo     :copen
+<leader>qn     :cnext
+<leader>qp     :cprev
 <leader>qc    :cclose
+```
+### tab 활용
+vim이 제공하는 buffer, tab 활용 단축키
+```
+nnoremap <silent> <leader>tp :tabprevious<CR>
+nnoremap <silent> <leader>tn :tabnext<CR>
+nnoremap <silent> <leader>tc :tabclose<CR>
 ```
 ### 파일 이동
 ```text
